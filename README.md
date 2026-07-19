@@ -4,9 +4,9 @@ Cloud backend platform for the Jarvis ecosystem — custom PHP MVC with JWT auth
 
 ## Requirements
 
-- PHP 8.4+
+- PHP 8.1+
 - Composer
-- SQLite (development) or MySQL/PostgreSQL (production)
+- SQLite (development) or MySQL (production / InfinityFree)
 
 ## Setup
 
@@ -19,36 +19,20 @@ composer serve
 
 The API will be available at `http://localhost:8080`.
 
-## Deploy to Vercel
+## Deploy to InfinityFree
 
-This project includes Vercel PHP runtime support via `vercel-php`.
+1. Run `composer install --no-dev --optimize-autoloader` locally.
+2. Upload the entire project to `htdocs` via FTP or File Manager.
+3. Copy `.env.example` to `.env` on the server and update values:
+   - `APP_URL` — your InfinityFree domain (e.g. `https://yoursite.infinityfreeapp.com`)
+   - `JWT_SECRET` — a long random secret
+   - For MySQL (recommended on InfinityFree): set `DB_CONNECTION=mysql` and MySQL credentials from the InfinityFree control panel
+4. Ensure `storage/database` and `storage/logs` are writable (chmod 755 or 775).
+5. Run migrations once via SSH/cron or visit after uploading (run `php database/migrate.php` if SSH is available).
 
-1. Push to GitHub and import the repo in [Vercel](https://vercel.com).
-2. Set **Framework Preset** to **Other**.
-3. Leave **Build Command** empty (Composer runs via `installCommand` in `vercel.json`).
-4. Leave **Output Directory** empty — do **not** set it to `public`.
-5. Set these environment variables in the Vercel dashboard:
+The web root uses `index.php` at the project root (InfinityFree `htdocs`). All routes are rewritten through it.
 
-| Variable | Value |
-|----------|-------|
-| `JWT_SECRET` | A long random secret string |
-| `APP_URL` | `https://your-project.vercel.app` |
-
-4. Deploy. Vercel runs `composer install` automatically.
-
-On Vercel, SQLite uses `/tmp/jarvis.sqlite` and migrations run automatically on first request.
-
-> **Note:** SQLite on Vercel is ephemeral (data resets between cold starts). Use MySQL/PostgreSQL for persistent production data.
-
-> **If the site downloads a PHP file:** your Vercel **Output Directory** is likely set to `public`. Clear it, redeploy, and visit `/api/v1/health`.
-
-Test the Vercel entry point locally:
-
-```bash
-composer install
-cp .env.example .env
-composer serve:vercel
-```
+Test: `https://your-domain.infinityfreeapp.com/api/v1/health`
 
 ## API Endpoints (v1)
 
@@ -65,13 +49,13 @@ composer serve:vercel
 
 ```
 app/          Application code (Controllers, Models, Services, Core)
-api/          Vercel serverless entry point
 config/       Configuration files
 database/     Migrations
-public/       Local web entry point
+public/       Web entry point (local dev)
 routes/       Route definitions
-storage/      Logs and SQLite database (local)
+storage/      Logs and SQLite database
 websocket/    WebSocket server (future)
+index.php     Shared hosting entry point (InfinityFree)
 ```
 
 See `JARVIS_CORE_BLUEPRINT.md` for the full roadmap.

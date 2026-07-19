@@ -1,7 +1,0 @@
-/vendor
-/public
-/storage/database/*.sqlite
-/storage/logs/*.log
-.env
-.phpunit.result.cache
-tests

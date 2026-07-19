@@ -8,10 +8,8 @@ use App\Core\Config;
 use App\Core\Database;
 use App\Core\Env;
 use App\Core\MigrationRunner;
-use App\Core\VercelBootstrap;
 
 Env::load(dirname(__DIR__));
-VercelBootstrap::apply();
 
 if (!defined('BASE_PATH')) {
     define('BASE_PATH', dirname(__DIR__));
