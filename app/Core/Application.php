@@ -17,6 +17,8 @@ final class Application
 
         Env::load($this->basePath);
 
+        VercelBootstrap::apply();
+
         $this->container = new Container();
         $this->router = new Router();
 
@@ -46,6 +48,13 @@ final class Application
         /** @var ErrorHandler $errorHandler */
         $errorHandler = $this->container->get(ErrorHandler::class);
         $errorHandler->register();
+
+        if (VercelBootstrap::isVercel()) {
+            MigrationRunner::runIfNeeded(
+                $this->container->get(Database::class),
+                $this->container->get(Config::class),
+            );
+        }
 
         $request = Request::capture();
         $response = $this->router->dispatch($request, $this->container);

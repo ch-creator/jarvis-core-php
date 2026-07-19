@@ -27,7 +27,11 @@
     },
     "scripts": {
         "migrate": "php database/migrate.php",
-        "serve": "php -S localhost:8080 -t public"
+        "serve": "php -S localhost:8080 -t public",
+        "serve:vercel": "php -S localhost:8080 api/index.php",
+        "vercel": [
+            "composer install --no-dev --optimize-autoloader"
+        ]
     },
     "config": {
         "sort-packages": true,

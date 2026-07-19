@@ -18,7 +18,7 @@ final class Logger
         $levelName = strtoupper((string) $config->get('logging.level', 'debug'));
         $path = (string) $config->get('logging.path', 'storage/logs/jarvis.log');
 
-        if (!str_starts_with($path, DIRECTORY_SEPARATOR) && !preg_match('/^[A-Za-z]:\\\\/', $path)) {
+        if (!str_starts_with($path, DIRECTORY_SEPARATOR) && !preg_match('/^[A-Za-z]:\\\\/', $path) && !str_starts_with($path, '/tmp/')) {
             $path = BASE_PATH . '/' . ltrim($path, '/');
         }
 
