@@ -1,15 +1,17 @@
 {
+  "version": 2,
+  "installCommand": "composer install --no-dev --optimize-autoloader",
   "functions": {
-    "api/index.php": {
+    "api/*.php": {
       "runtime": "vercel-php@0.8.0",
       "memory": 1024,
       "maxDuration": 30
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/api/index.php"
+      "src": "/(.*)",
+      "dest": "/api/index.php"
     }
   ]
 }
